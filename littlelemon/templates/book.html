@@ -1,0 +1,265 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Little Lemon | Reservations</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Karla:wght@400;500;700&family=Markazi+Text:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brandGreen: "#495E57",
+              brandYellow: "#F4CE14",
+              brandSalmon: "#EE9972",
+              brandPeach: "#FBDABB",
+              brandGray: "#EDEFEE",
+              brandDark: "#333333",
+            },
+            fontFamily: {
+              heading: ['"Markazi Text"', "serif"],
+              body: ['"Karla"', "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body
+    class="font-body bg-brandGray text-brandDark antialiased flex flex-col min-h-screen"
+  >
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-20">
+          <div class="flex-shrink-0 flex items-center">
+            <a href="{% url 'home' %}">
+              <img
+                class="h-12 w-auto"
+                src="{% static 'restaurant/logo.png' %}"
+                alt="Little Lemon Logo"
+                onerror="
+                  this.src = 'https://placehold.co/200x60?text=Little+Lemon'
+                "
+              />
+            </a>
+          </div>
+
+          <div class="hidden md:flex space-x-8 items-center">
+            <a
+              href="{% url 'home' %}"
+              class="text-brandGreen font-bold hover:text-brandYellow transition duration-200"
+              >Home</a
+            >
+            <a
+              href="{% url 'home' %}#about"
+              class="text-brandGreen font-bold hover:text-brandYellow transition duration-200"
+              >About</a
+            >
+            <a
+              href="{% url 'menu' %}"
+              class="text-brandGreen font-bold hover:text-brandYellow transition duration-200"
+              >Menu</a
+            >
+            <a
+              href="{% url 'book' %}"
+              class="bg-brandYellow text-brandDark px-6 py-2.5 rounded-full font-bold shadow-md transform scale-105"
+              >Reservations</a
+            >
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <header class="bg-brandGreen py-12 md:py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="font-heading text-5xl md:text-7xl text-brandYellow mb-4">
+          Reserve a Table
+        </h1>
+        <p class="font-body text-lg text-white/90 max-w-2xl mx-auto">
+          Join us for a memorable dining experience. Fill out the form below to
+          secure your table at Little Lemon Chicago.
+        </p>
+      </div>
+    </header>
+
+    <main
+      class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 w-full"
+    >
+      <div
+        class="bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col lg:flex-row"
+      >
+        <div class="w-full lg:w-1/2 p-8 md:p-12">
+          <h2 class="font-heading text-4xl text-brandDark mb-6">
+            Booking Details
+          </h2>
+
+          {% if messages %} {% for message in messages %}
+          <div
+            class="mb-6 border-l-4 p-4 rounded-r-lg font-bold {% if message.tags == 'error' %} bg-red-50 border-red-500 text-red-700 {% else %} bg-green-50 border-brandGreen text-brandGreen {% endif %}"
+          >
+            {{ message }}
+          </div>
+          {% endfor %} {% endif %}
+
+          <form method="POST" action="{% url 'book' %}" class="space-y-6">
+            {% csrf_token %}
+
+            <div>
+              <label
+                for="Name"
+                class="block text-sm font-bold text-gray-700 mb-2"
+                >Full Name</label
+              >
+              <input
+                type="text"
+                id="Name"
+                name="Name"
+                required
+                placeholder="John Doe"
+                class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-brandYellow focus:border-brandYellow transition-colors outline-none bg-gray-50 focus:bg-white"
+              />
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <label
+                  for="No_of_guests"
+                  class="block text-sm font-bold text-gray-700 mb-2"
+                  >Guests</label
+                >
+                <input
+                  type="number"
+                  id="No_of_guests"
+                  name="No_of_guests"
+                  min="1"
+                  max="20"
+                  required
+                  value="2"
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-brandYellow transition-colors outline-none bg-gray-50 focus:bg-white"
+                />
+              </div>
+
+              <div>
+                <label
+                  for="Booking_date"
+                  class="block text-sm font-bold text-gray-700 mb-2"
+                  >Date</label
+                >
+                <input
+                  type="date"
+                  id="Booking_date"
+                  name="Booking_date"
+                  required
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-brandYellow transition-colors outline-none bg-gray-50 focus:bg-white text-gray-700"
+                />
+              </div>
+
+              <div>
+                <label
+                  for="Booking_time"
+                  class="block text-sm font-bold text-gray-700 mb-2"
+                  >Time</label
+                >
+                <input
+                  type="time"
+                  id="Booking_time"
+                  name="Booking_time"
+                  required
+                  min="11:00"
+                  max="22:00"
+                  value="18:00"
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-brandYellow transition-colors outline-none bg-gray-50 focus:bg-white text-gray-700"
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              class="w-full bg-brandYellow text-brandDark font-bold text-lg py-4 rounded-xl shadow-md hover:bg-brandDark hover:text-brandYellow transition-all duration-300 mt-4"
+            >
+              Confirm Reservation
+            </button>
+          </form>
+        </div>
+
+        <div class="w-full lg:w-1/2 bg-brandGreen relative min-h-[300px]">
+          <img
+            src="https://images.pexels.com/photos/262047/pexels-photo-262047.jpeg?auto=compress&cs=tinysrgb&w=800"
+            alt="Restaurant Table"
+            class="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-overlay"
+          />
+
+          <div
+            class="relative z-10 p-8 md:p-12 h-full flex flex-col justify-center text-white"
+          >
+            <h3 class="font-heading text-4xl text-brandYellow mb-4">
+              We look forward to hosting you!
+            </h3>
+            <p class="font-body text-lg opacity-90 mb-8">
+              Whether it's a romantic dinner, a family gathering, or a business
+              lunch, our team is dedicated to providing you with an
+              unforgettable Mediterranean experience.
+            </p>
+
+            <div class="space-y-4">
+              <div class="flex items-center">
+                <svg
+                  class="w-6 h-6 text-brandYellow mr-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                  ></path>
+                </svg>
+                <span>Open Daily: 11:00 AM - 10:00 PM</span>
+              </div>
+              <div class="flex items-center">
+                <svg
+                  class="w-6 h-6 text-brandYellow mr-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                  ></path>
+                </svg>
+                <span>Need a large party? Call (312) 555-0198</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer
+      class="bg-brandDark text-brandGray pt-16 pb-8 border-t-4 border-brandYellow"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+          class="border-t border-brandGreen pt-8 flex flex-col md:flex-row justify-between items-center text-sm opacity-60"
+        >
+          <p>&copy; 2026 Little Lemon Restaurant. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

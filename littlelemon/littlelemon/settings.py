@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,6 +32,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'unfold',
+    'unfold.contrib.filters',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -141,4 +144,62 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ]
+}
+
+UNFOLD = {
+    "SITE_TITLE": "Little Lemon Admin",
+    "SITE_HEADER": "Little Lemon Dashboard",
+    "DARK_MODE": True, # Keeps your DevSec vibe while using brand colors
+    
+    # Customizing the Colors (Green & Yellow)
+    "COLORS": {
+        "primary": {
+            "50": "255 255 255",   # Pure White (Forces border visibility)
+            "100": "244 206 20",   # Yellow
+            "200": "244 206 20",
+            "300": "244 206 20",
+            "400": "244 206 20",
+            "500": "244 206 20",   # Little Lemon Yellow (Buttons)
+            "600": "73 94 87",     # Little Lemon Green (Hover)
+            "700": "73 94 87",
+            "800": "73 94 87",
+            "900": "73 94 87",
+        },
+    },
+
+    "SIDEBAR": {
+        "show_search": True,
+        "navigation": [
+            {
+                "title": "Restaurant Management",
+                "separator": True, # Visual divider
+                "items": [
+                    {
+                        "title": "Booking Overview",
+                        "icon": "calendar_month", # Updated icon for bookings
+                        "link": reverse_lazy("admin:restaurant_booking_changelist"),
+                    },
+                    {
+                        "title": "Menu Editor",
+                        "icon": "restaurant_menu",
+                        "link": reverse_lazy("admin:restaurant_menu_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": "User Control",
+                "items": [
+                    {
+                        "title": "Staff & Permissions",
+                        "icon": "person_add",
+                        "link": reverse_lazy("admin:auth_user_changelist"),
+                    },
+                ],
+            },
+        ],
+    },
+    "STYLES": [
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css", # Just to test if external links work
+        "/* Inline CSS */ input { border: 2px solid yellow !important; background: rgba(255,255,255,0.1) !important; }"
+    ],
 }

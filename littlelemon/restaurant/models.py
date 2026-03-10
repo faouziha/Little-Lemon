@@ -6,6 +6,7 @@ class Booking(models.Model):
     Name = models.CharField(max_length=255)
     No_of_guests = models.IntegerField()
     Booking_date = models.DateField()
+    Booking_time = models.TimeField(default="12:00")
 
 class Menu(models.Model):
     Title = models.CharField(max_length=255)

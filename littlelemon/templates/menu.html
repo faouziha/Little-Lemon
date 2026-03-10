@@ -1,0 +1,118 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Little Lemon | Our Menu</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Karla:wght@400;500;700&family=Markazi+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brandGreen: '#495E57',
+                        brandYellow: '#F4CE14',
+                        brandSalmon: '#EE9972',
+                        brandPeach: '#FBDABB',
+                        brandGray: '#EDEFEE',
+                        brandDark: '#333333',
+                    },
+                    fontFamily: {
+                        heading: ['"Markazi Text"', 'serif'],
+                        body: ['"Karla"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-body bg-brandGray text-brandDark antialiased flex flex-col min-h-screen">
+
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="{% url 'home' %}">
+                        <img class="h-12 w-auto" src="{% static 'restaurant/logo.png' %}" alt="Little Lemon Logo" onerror="this.src='https://placehold.co/200x60?text=Little+Lemon'">
+                    </a>
+                </div>
+                
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="{% url 'home' %}" class="text-brandGreen font-bold hover:text-brandYellow transition duration-200">Home</a>
+                    <a href="{% url 'home' %}#about" class="text-brandGreen font-bold hover:text-brandYellow transition duration-200">About</a>
+                    <a href="{% url 'menu' %}" class="text-brandYellow font-bold border-b-2 border-brandYellow pb-1">Menu</a>
+                    <a href="{% url 'book' %}" class="bg-brandYellow text-brandDark px-6 py-2.5 rounded-full font-bold shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">Reservations</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-brandGreen py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="font-heading text-5xl md:text-7xl text-brandYellow mb-4">Our Menu</h1>
+            <p class="font-body text-lg text-white/90 max-w-2xl mx-auto">
+                Authentic Mediterranean flavors prepared with fresh, locally sourced ingredients. 
+                Browse our daily offerings below.
+            </p>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            {% for item in menu_data %}
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col">
+                
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="font-heading text-3xl font-bold text-brandDark group-hover:text-brandGreen transition-colors">{{ item.Title }}</h3>
+                    <span class="text-brandSalmon font-bold text-2xl bg-brandPeach/20 px-3 py-1 rounded-lg">
+                        ${{ item.Price }}
+                    </span>
+                </div>
+                
+                <p class="font-body text-gray-600 mb-8 flex-grow">
+                    A delicious and authentic Mediterranean take on {{ item.Title|lower }}, prepared fresh to order by our expert chefs.
+                </p>
+                
+                <div class="flex justify-between items-center pt-4 border-t border-gray-100 mt-auto">
+                    <span class="text-sm font-body px-3 py-1 rounded-full 
+                        {% if item.Inventory > 5 %} bg-green-100 text-green-700 
+                        {% elif item.Inventory > 0 %} bg-yellow-100 text-yellow-700 
+                        {% else %} bg-red-100 text-red-700 {% endif %}">
+                        {% if item.Inventory > 5 %} Available
+                        {% elif item.Inventory > 0 %} Only {{ item.Inventory }} left!
+                        {% else %} Sold Out
+                        {% endif %}
+                    </span>
+                    
+                    
+                </div>
+            </div>
+            
+            {% empty %}
+            <div class="col-span-full text-center py-20 bg-white rounded-2xl shadow-sm border border-gray-100">
+                <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                <h3 class="font-heading text-3xl text-brandDark mb-2">Menu is Updating</h3>
+                <p class="text-gray-500 font-body">Our chefs are currently finalizing today's offerings. Please check back soon!</p>
+            </div>
+            {% endfor %}
+
+        </div>
+    </main>
+
+    <footer class="bg-brandDark text-brandGray pt-16 pb-8 border-t-4 border-brandYellow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="border-t border-brandGreen pt-8 flex flex-col md:flex-row justify-between items-center text-sm opacity-60">
+                <p>&copy; 2026 Little Lemon Restaurant. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
